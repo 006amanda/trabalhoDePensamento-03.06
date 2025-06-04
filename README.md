@@ -1,0 +1,1 @@
+# trabalhoDePensamento-03.06
