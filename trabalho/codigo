@@ -1,0 +1,88 @@
+// Grupo: Amanda, Cristhian Gabriel, Heinz, Mauricyo, Rafaela
+
+def item_repetido(morador, item, lista_validas):
+    for registro in lista_validas:
+        dados = registro.split(" - ")
+        if dados[0] == morador and dados[1] == item:
+            return True
+    return False
+
+def total_entregas_morador(morador, lista_validas):
+    count = 0
+    for registro in lista_validas:
+        if registro.split(" - ")[0] == morador:
+            count += 1
+    return count
+
+def processar_entregas(entregas):
+    validas = []
+    invalidas = []
+    moradores = []
+
+    for entrega in entregas:
+        nome, item, categoria, data = entrega.split(" - ")
+
+        if nome not in moradores:
+            moradores.append(nome)
+
+        if item_repetido(nome, item, validas):
+            invalidas.append(entrega + " -> inválida: item repetido")
+        elif total_entregas_morador(nome, validas) >= 5:
+            invalidas.append(entrega + " -> inválida: excedeu limite total")
+        else:
+            validas.append(entrega)
+
+    return validas, invalidas, moradores
+
+def relatorio_por_morador(validas, moradores):
+    print("\nRELATÓRIO POR MORADOR:")
+    for morador in moradores:
+        print(f"\n{morador}:")
+        for registro in validas:
+            nome, item, categoria, data = registro.split(" - ")
+            if nome == morador:
+                print(f"  {item} - {categoria} - {data}")
+
+def relatorio_entregas_invalidas(invalidas):
+    print("\nRELATÓRIO DE ENTREGAS INVÁLIDAS:")
+    for registro in invalidas:
+        print("  " + registro
+              )
+
+def resumo_geral(validas, invalidas, moradores):
+    print("\nRESUMO GERAL:")
+    print(f"1. Total de moradores que participaram: {len(moradores)}")
+
+    maior = 0
+    morador_maior = ""
+
+    for morador in moradores:
+        total = total_entregas_morador(morador, validas)
+        if total > maior:
+            maior = total
+            morador_maior = morador
+
+    print(f"2. Morador que mais recebeu (válido): {morador_maior} ({maior} itens)")
+    print(f"3. Total de entregas inválidas: {len(invalidas)}")
+
+def main():
+    entregas = [
+        "Ana - arroz - alimento - 03/06",
+        "Bruno - sabão - higiene - 06/06",
+        "Ana - arroz - alimento - 12/06",
+        "Ana - feijão - alimento - 14/06",
+        "Bruno - sabão - higiene - 17/06",
+        "Ana - sabão - higiene - 17/06",
+        "Ana - máscara - higiene - 20/06",
+        "Ana - boné - roupa - 25/06",
+        "Ana - toalha - higiene - 28/06"
+    ]
+
+    validas, invalidas, moradores = processar_entregas(entregas)
+    relatorio_por_morador(validas, moradores)
+    relatorio_entregas_invalidas(invalidas)
+    resumo_geral(validas, invalidas, moradores)
+
+main()
+
+
